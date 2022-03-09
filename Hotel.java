@@ -25,12 +25,58 @@ class Hotel {
   public static void newRoom() {
     Scanner sc = new Scanner(System.in);
     double charge_price = 0;
-    System.out.println("Enter room number: ");
-    int room_num = sc.nextInt();
+    System.out.println("How many people: ");
+    int guest_num = sc.nextInt();
+    System.out.println("How many room: ");
+    int num_room =sc.nextInt();
+    for(int i=0; i<num_room ; i--){
+      System.out.println("---Type of room---");
+      System.out.println("Standard room : 1");
+      System.out.println("Superior room : 2");
+      System.out.println("Deluxe room : 3");
+      int room_type =sc.nextInt();
+      int[][] room_info=room_info();
+      switch(room_type){
+        case 1:
+        /*
+          System.out.println("---Type of bad---");
+          System.out.println("Single Bed : 0");
+          System.out.println("Queen Bed : 1");
+          int bed;
+          for(int i = 0 ; i < room_info.length; i++) {
+            if(room_info[i][2]==0){
+              
+              }
+            }
+          */
+          //single bed
+          for(int j=101;j<=105;j++){
+            check_isRoom_available(j);
+          }
+          //queen bed
+          for(int j=106;j<=110;j++){
+            check_isRoom_available(j);
+          }
+          
+        break;
+        case 2:
+          //201-210
+        break;
+        case 3:
+          //301-310
+        break;
+        default:
+        System.out.println("Invalid input Please try again");
+        newRoom();
+        break;
+      }
+    }
+    // how many people , room type , bed type ,
 
     if(check_isRoom_available(room_num)) {
       System.out.println("Room is available");
       update_room_info(room_num, 1);
+      service(charge_price);
     } else {
       System.out.println("Try again");
       sc.close();
@@ -38,24 +84,22 @@ class Hotel {
     }
 
   }
+  public static void check_bed(){
+    
+  }
 
   public static void check_in() {
-    System.out.println("has user rented: 1");
-    System.out.println("new room: 2");
-    System.out.println("Back to main: 3");
+    System.out.println("new room: 1");
+    System.out.println("Back to main: 2");
 
     Scanner sc = new Scanner(System.in);
     int choice = sc.nextInt();
 
     switch (choice) {
       case 1:
-        System.out.println("Enter room number: ");
-        // int room_num = sc.nextInt();
-        break;
-      case 2:
         newRoom();
         break;
-      case 3:
+      case 2:
         sc.close();
         dashboard();
         break;
@@ -67,7 +111,7 @@ class Hotel {
     }
 
   }
-
+  
   public static void check_out() {
     Scanner input = new Scanner(System.in);
     System.out.println("Check out");
@@ -75,45 +119,55 @@ class Hotel {
     int room = input.nextInt();
     int [] temp = find_room(room);
 
-    //reset room status
-    for(int i =1;i<=3;i++){
-      temp[i] = 0;
-    }
-    //return to room_info
-
+    //show room option , user info
     
-    input.close();
+    //service
+    
+
+    //reset room status and return to room_info
+    System.out.print("cancel :0");
+    System.out.print("confirm :1");
+    int confirm = input.nextInt();
+    switch(confirm){
+      case 0:
+        check_out();
+        break;
+      case 1:
+        update_room_info(room,0);
+        input.close();
+        break;
+      default:
+      System.out.println("Invalid input Please try again");
+        input.close();
+        break;
+    }
   }
 
   public static void room_status() {
     Scanner input = new Scanner(System.in);
     System.out.println("----------Room Status----------");
-    System.out.println("Show all room : 1");
+    System.out.println("Show all : 1");
     System.out.println("Check status by type room : 2");
     System.out.println("Check available room: 3");
     System.out.println("Check not available room : 4");
     System.out.println("Back to main : 5");
-    int check = input.nextInt();
-    if(check==1){ // best practice
-
-    }
-    else if(check==2){
-
-    }
-    else if(check==3){
-
-    }
-    else if(check==4){
-
-    }
-    else if(check==5){
-
-    }
-    else{
+    switch(input.nextInt()){
+      case 1:
       
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      case 4:
+        break;
+      case 5:
+        break;
+      default:
+        System.out.println("Invalid input Please try again");
+        room_status();
     }
     input.close();
-    
   }
   
   public static void show_all_status(){
@@ -146,9 +200,18 @@ class Hotel {
         break;
     }
 
-    return total;
+    return totals;
   }
 
+ /* public static void total_price(){
+    Scanner input = new Scanner(System.in);
+    System.out.println("Total price");
+    System.out.print("Enter room number: ");
+    int room = input.nextInt();
+    int [] room_tmp = find_room(room);
+    double price =  room_tmp[4]+service(totals);
+    input.close();
+  }*/
   // ![room_num, room_type, room_bed, room_status, room_price]
 
   public static void room_detail() {
@@ -188,6 +251,7 @@ class Hotel {
   }
 
 
+
   // create method return array of room parameters room room number
   public static int[] find_room(int room_num) {
     int[][] room_info;
@@ -205,6 +269,16 @@ class Hotel {
     return tmp;
   }
 
+  public static void add_user_info(String name, String room_numString, String pString){
+    
+  }
+
+  // ["name", "room", "price"]
+  public static String[][] user_info(String[] args) {
+    String[][] user_info = new String[0][0];
+    return user_info;
+  }
+
   public static int[][] room_info() {
       int[][] room = {
       {101,0,0,0,2000},
@@ -212,41 +286,31 @@ class Hotel {
       {103,0,0,0,2000},
       {104,0,0,0,2000},
       {105,0,0,0,2000},
-      {106,0,0,0,2000},
-      {107,0,0,0,2000},
-      {108,0,0,0,2000},
-      {109,0,0,0,2000},
-      {110,0,0,0,2000},
-      {201,0,0,0,2000},
-      {202,0,0,0,2000},
-      {203,0,0,0,2000},
-      {204,0,0,0,2000},
-      {205,0,0,0,2000},
-      {206,0,0,0,2000},
-      {207,0,0,0,2000},
-      {208,0,0,0,2000},
-      {209,0,0,0,2000},
-      {210,0,0,0,2000},
-      {301,0,0,0,2800},
-      {302,0,0,0,2800},
-      {303,0,0,0,2800},
-      {304,0,0,0,2800},
-      {305,0,0,0,2800},
-      {306,0,0,0,2800},
-      {307,0,0,0,2800},
-      {308,0,0,0,2800},
-      {309,0,0,0,2800},
-      {310,0,0,0,2800},
-      {401,0,0,0,3500},
-      {402,0,0,0,3500},
-      {403,0,0,0,3500},
-      {404,0,0,0,3500},
-      {405,0,0,0,3500},
-      {406,0,0,0,3500},
-      {407,0,0,0,3500},
-      {408,0,0,0,3500},
-      {409,0,0,0,3500},
-      {410,0,0,0,3500},
+      {106,0,1,0,2000},
+      {107,0,1,0,2000},
+      {108,0,1,0,2000},
+      {109,0,1,0,2000},
+      {110,0,1,0,2000},
+      {201,1,0,0,2800},
+      {202,1,0,0,2800},
+      {203,1,0,0,2800},
+      {204,1,0,0,2800},
+      {205,1,0,0,2800},
+      {206,1,1,0,2800},
+      {207,1,1,0,2800},
+      {208,1,1,0,2800},
+      {209,1,1,0,2800},
+      {210,1,1,0,2800},
+      {301,2,0,0,3500},
+      {302,2,0,0,3500},
+      {303,2,0,0,3500},
+      {304,2,0,0,3500},
+      {305,2,0,0,3500},
+      {306,2,1,0,3500},
+      {307,2,1,0,3500},
+      {308,2,1,0,3500},
+      {309,2,1,0,3500},
+      {310,2,1,0,3500},
     };
 
     return room;
@@ -280,6 +344,7 @@ class Hotel {
         return;
       default:
         System.out.println("Invalid input");
+        dashboard();
     }
 
     scan.close();
