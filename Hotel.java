@@ -68,7 +68,7 @@ class Hotel {
   }
 
   public static void room_status() {
-    Scanner  = new Scanner(System.in);
+    Scanner in = new Scanner(System.in);
     System.out.println("----------Room Status----------");
     System.out.println("Show all room : 1");
     System.out.println("Check status by type room : 2");
@@ -86,7 +86,18 @@ class Hotel {
     System.out.println("room details");
     System.out.print("Enter room number: ");
     int room = input.nextInt(); 
-    
+    boolean found = false;
+        for (int i = 0; i < list.length; i++) {
+            if (num == list[i]) {
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            System.out.println("That number was found.");
+        } else {
+            System.out.println("That number was not found.");
+        }
   }
   
   // [room_num, room_type, room_bed, room_status, room_price]
