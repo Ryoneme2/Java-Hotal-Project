@@ -40,29 +40,48 @@ class Hotel {
     System.out.println();
   }
 
+  // sub method(check in)
   public static void newRoom() {
     try (Scanner sc = new Scanner(System.in)) {
       double charge_price = 0;
       System.out.println("How many people: ");
       int guest_num = sc.nextInt();
-      System.out.println("How many room: ");
-      int room_num = sc.nextInt();
       System.out.println("---Type of room---");
       System.out.println("Standard room : 1");
       System.out.println("Superior room : 2");
       System.out.println("Deluxe room : 3");
       int room_type = sc.nextInt();
-
-      // how many people , room type , bed type ,
-
-      if (check_isRoom_available(room_num)) {
-        System.out.println("Room is available");
-        update_room_info(room_num, 1);
-        service(charge_price);
+      // how many people , room type , bed type
+      int room;
+      if (guest_num % 2 == 0) {
+        room = guest_num / 2;
       } else {
-        System.out.println("Try again");
-        newRoom();
+        room = guest_num / 2 + 1;
       }
+
+      switch (room_type) {
+        case 1:
+
+          break;
+        case 2:
+
+          break;
+        case 3:
+
+          break;
+        default:
+          System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
+          newRoom();
+          break;
+      }
+      // if (check_isRoom_available(room_num)) {
+      // System.out.println("Room is available");
+      // update_room_info(room_num, 1);
+      // service(charge_price);
+      // } else {
+      // System.out.println("Try again");
+      // newRoom();
+      // }
     }
   }
 
@@ -70,6 +89,7 @@ class Hotel {
 
   }
 
+  // method 1 (check in)
   public static void check_in() {
     System.out.println("new room: 1");
     System.out.println("Back to main: 2");
@@ -92,12 +112,13 @@ class Hotel {
     }
   }
 
+  // method 2 (check out)
   public static void check_out() {
     try (Scanner input = new Scanner(System.in)) {
       System.out.println("Check out");
       System.out.print("Enter room number: ");
       int room = input.nextInt();
-      int[] temp = find_room(room);
+      // int[] temp = find_room(room);
 
       // reset room status and return to room_info
       System.out.print("cancel :0");
@@ -110,7 +131,7 @@ class Hotel {
         case 1:
           update_room_info(room, 0);
           System.out.println("Complete !!");
-          break;
+          dashboard();
         default:
           System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
           break;
@@ -118,9 +139,10 @@ class Hotel {
     }
   }
 
+  // method 3(room status)
   public static void room_status() {
     try (Scanner input = new Scanner(System.in)) {
-      System.out.println("----------Room Status----------");
+      System.out.println(ANSI_BLUE + "----------Room Status----------" + ANSI_RESET);
       System.out.println("Show all : 1");
       System.out.println("Check status by type room : 2");
       System.out.println("Check available room: 3");
@@ -134,9 +156,73 @@ class Hotel {
           check_available_room_byType();
           break;
         case 3:
-
+          System.out.println("----------Available Room----------");
+          int[][] room_info = room_info();
+          String[][] table = new String[room_info.length][];
+          table[0] = new String[] { "Room number", "Status\t\t", "Room type", "Bed Type\t", "Price" };
+          for (int i = 1; i < room_info.length; i++) {
+            String room_num = room_info[i][0] + "\t";
+            String status = "";
+            String type = "";
+            String b_type = "";
+            if (room_info[i][3] == 0) {
+              status = ANSI_GREEN + "Available\t" + ANSI_RESET;
+            }
+            if (room_info[i][1] == 1) {
+              type = "Standard";
+            } else if (room_info[i][1] == 2) {
+              type = "Superior";
+            } else {
+              type = "Deluxe\t";
+            }
+            if (room_info[i][2] == 1) {
+              b_type = "Single\t\t";
+            } else {
+              b_type = "Queen size\t";
+            }
+            String price = "" + room_info[i][4] + "\t";
+            table[i] = new String[] { room_num, status, type, b_type, price };
+          }
+          for (String[] row : table) {
+            printRow(row);
+            System.out.println(
+                "======================================================================================================");
+          }
           break;
         case 4:
+          System.out.println(ANSI_BLUE + "----------Not Available Room----------" + ANSI_RESET);
+          int[][] room_infor = room_info();
+          String[][] tables = new String[room_infor.length][];
+          tables[0] = new String[] { "Room number", "Status\t\t", "Room type", "Bed Type\t", "Price" };
+          for (int i = 1; i < room_infor.length; i++) {
+            String room_num = room_infor[i][0] + "\t";
+            String status = "";
+            String type = "";
+            String b_type = "";
+            if (room_infor[i][3] == 1) {
+              status = ANSI_RED + "Not available\t" + ANSI_RESET;
+            } else {
+            }
+            if (room_infor[i][1] == 1) {
+              type = "Standard";
+            } else if (room_infor[i][1] == 2) {
+              type = "Superior";
+            } else {
+              type = "Deluxe\t";
+            }
+            if (room_infor[i][2] == 1) {
+              b_type = "Single\t\t";
+            } else {
+              b_type = "Queen size\t";
+            }
+            String price = "" + room_infor[i][4] + "\t";
+            tables[i] = new String[] { room_num, status, type, b_type, price };
+          }
+          for (String[] row : tables) {
+            printRow(row);
+            System.out.println(
+                "======================================================================================================");
+          }
           break;
         case 5:
           dashboard();
@@ -150,7 +236,7 @@ class Hotel {
   }
 
   public static void show_all_status() {
-    System.out.println("----------All room----------");
+    System.out.println(ANSI_BLUE + "----------All room----------" + ANSI_RESET);
     int[][] room_info = room_info();
     String[][] table = new String[room_info.length][];
     table[0] = new String[] { "Room number", "Status\t\t", "Room type", "Bed Type\t", "Price" };
@@ -191,39 +277,45 @@ class Hotel {
   }
 
   public static void check_available_room_byType() {
-  System.out.print("Enter room type: ");
-  try (Scanner sc = new Scanner(System.in)) {
-    try {
-      switch (sc.nextInt()) {
-        case 1:
-          // single bed
-          for (int j = 101; j <= 110; j++) {
-            check_isRoom_available(j);
-          }
-          break;
-        case 2:
-          // 201-210
-          break;
-        case 3:
-          // 301-310
-          break;
-        default:
-          System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
-          newRoom();
-          break;
+    System.out.print("Enter room type: ");
+    try (Scanner sc = new Scanner(System.in)) {
+      try {
+        switch (sc.nextInt()) {
+          case 1:
+            // single bed
+            for (int j = 101; j <= 110; j++) {
+              check_isRoom_available(j);
+            }
+            break;
+          case 2:
+            // 201-210
+            for (int j = 201; j <= 210; j++) {
+              check_isRoom_available(j);
+            }
+            break;
+          case 3:
+            // 301-310
+            for (int j = 301; j <= 310; j++) {
+              check_isRoom_available(j);
+            }
+            break;
+          default:
+            System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
+            newRoom();
+            break;
+        }
+      } catch (Exception e) {
+        System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
+        // newRoom();
       }
-    } catch (Exception e) {
-      System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
-      // newRoom();
     }
   }
-}
 
   public static double service(double total) {
     double totals = total;
     try (Scanner sc = new Scanner(System.in)) {
       String str = "";
-      System.out.println("----------Service----------");
+      System.out.println(ANSI_BLUE + "----------Service----------" + ANSI_RESET);
 
       try {
 
@@ -267,18 +359,19 @@ class Hotel {
     }
   }
 
+  // method 4(room detail)
   public static void room_detail() {
     try (Scanner input = new Scanner(System.in)) {
       try {
 
-        System.out.println("----------room detail----------");
+        System.out.println(ANSI_BLUE + "----------room detail----------" + ANSI_RESET);
         System.out.print("Enter room number: ");
         int room = input.nextInt();
         int[] room_tmp = find_room(room);
-        if(room_tmp.length <= 0){
+        if (room_tmp.length <= 0) {
           System.out.println(ANSI_RED + "ROOM NOT FOUND" + ANSI_RESET);
           System.out.println(
-            "======================================================================================================");
+              "======================================================================================================");
           room_detail();
         }
         String[][] table = new String[room_tmp.length][];
@@ -309,10 +402,10 @@ class Hotel {
         table[0] = new String[] { room_num, status, type, b_type, price };
         for (String[] row : table) {
           System.out.println(
-            "======================================================================================================");
+              "======================================================================================================");
           printRow(row);
-            System.out.println(
-          "======================================================================================================");
+          System.out.println(
+              "======================================================================================================");
         }
 
         System.out.println("Room number:" + room_tmp[0]);
@@ -379,17 +472,17 @@ class Hotel {
     int[][] room = {
         { 101, 0, 0, 0, 2000 },
         { 102, 0, 0, 0, 2000 },
-        { 103, 0, 0, 0, 2000 },
+        { 103, 0, 0, 1, 2000 },
         { 104, 0, 0, 0, 2000 },
-        { 105, 0, 0, 0, 2000 },
+        { 105, 0, 0, 1, 2000 },
         { 106, 0, 1, 0, 2000 },
         { 107, 0, 1, 0, 2000 },
         { 108, 0, 1, 0, 2000 },
-        { 109, 0, 1, 0, 2000 },
+        { 109, 0, 1, 1, 2000 },
         { 110, 0, 1, 0, 2000 },
         { 201, 1, 0, 0, 2800 },
         { 202, 1, 0, 0, 2800 },
-        { 203, 1, 0, 0, 2800 },
+        { 203, 1, 0, 1, 2800 },
         { 204, 1, 0, 0, 2800 },
         { 205, 1, 0, 0, 2800 },
         { 206, 1, 1, 0, 2800 },
@@ -414,49 +507,53 @@ class Hotel {
 
   public static void dashboard() {
     try (Scanner scan = new Scanner(System.in)) {
-        System.out.println("----------Welcome to the Hotel----------");
-        System.out.println("Check in: 1");
-        System.out.println("Check out: 2");
-        System.out.println("Room status: 3");
-        System.out.println("Room detail: 4");
-        System.out.println("exit: 5");
+      System.out.println(ANSI_BLUE + "----------Welcome to the Hotel----------" + ANSI_RESET);
+      System.out.println("Check in: 1");
+      System.out.println("Check out: 2");
+      System.out.println("Room status: 3");
+      System.out.println("Room detail: 4");
+      System.out.println("exit: 5");
 
-        switch (scan.nextInt()) {
-          case 1:
-
-            check_in();
-            break;
-          case 2:
-
-            check_out();
-            break;
-          case 3:
-
-            room_status();
-            break;
-          case 4:
-
-            room_detail();
-            break;
-          case 5:
-            scan.close();
-            return;
-          default:
-            System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
-            dashboard();
-        }
-
-      } catch (InputMismatchException e) {
-        System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
-        dashboard();
-      } finally {
-        dashboard();
+      switch (scan.nextInt()) {
+        case 1:
+          check_in();
+          break;
+        case 2:
+          check_out();
+          break;
+        case 3:
+          room_status();
+          break;
+        case 4:
+          room_detail();
+          break;
+        case 5:
+          scan.close();
+          end();
+        default:
+          System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
+          dashboard();
       }
+    } catch (InputMismatchException e) {
+      System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
+      dashboard();
+    } finally {
+      end();
+    }
+  }
 
+  public static void end() {
+    return;
   }
 
   public static void main(String[] args) {
-    dashboard();
-    System.out.println("Thank you for using our service");
+    try {
+      dashboard();
+      System.out.println("Thank you for using our service");
+    } catch (Exception e) {
+      System.out.println(ANSI_YELLOW + "BYE BYE BYE" + ANSI_RESET);
+    } finally {
+      System.out.println("Thank you for using our service");
+    }
   }
 }
