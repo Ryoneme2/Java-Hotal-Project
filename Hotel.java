@@ -1,10 +1,10 @@
-import java.util.Scanner;
 import java.util.*;
 
 // first check-in - checkout
 // -- check-in: if customers rented enter the room number
 //            : if not check room available and get info from customer
 // -- checkout: if customers rented enter the room number
+
 
 class Hotel {
   public static final String ANSI_RESET = "\u001B[0m";
@@ -16,6 +16,15 @@ class Hotel {
   public static final String ANSI_PURPLE = "\u001B[35m";
   public static final String ANSI_CYAN = "\u001B[36m";
   public static final String ANSI_WHITE = "\u001B[37m";
+
+  public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
+  public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
+  public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
+  public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
+  public static final String ANSI_BLUE_BACKGROUND = "\u001B[44m";
+  public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
+  public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
+  public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
   // ![room_num, room_type, room_bed, room_status, room_price]
   public static int[] addElemArr(int arr[], int a) {
@@ -44,48 +53,88 @@ class Hotel {
   public static void newRoom() {
     try (Scanner sc = new Scanner(System.in)) {
       double charge_price = 0;
+      int[][] room_info = room_info();
       System.out.println("How many people: ");
       int guest_num = sc.nextInt();
-      System.out.println("---Type of room---");
-      System.out.println("Standard room : 1");
-      System.out.println("Superior room : 2");
-      System.out.println("Deluxe room : 3");
-      int room_type = sc.nextInt();
       // how many people , room type , bed type
-      int room;
-      if (guest_num % 2 == 0) {
-        room = guest_num / 2;
-      } else {
-        room = guest_num / 2 + 1;
+      double room = Math.ceil(guest_num / 2);
+      String room_type_str = "";
+      double all_total = 0;
+      for (int i = 1; i <= room; i++) {
+        System.out.println("Room " + room + " option");
+        System.out.println("---Type of room---");
+        System.out.println("Standard room : 1");
+        System.out.println("Superior room : 2");
+        System.out.println("Deluxe room : 3");
+        int room_type = sc.nextInt();
+        switch (room_type) {
+          case 1:
+            room_type_str = "Standard room";
+            System.out.println(bed());
+            while (true){
+              if (room_info[i][3] == 0) {
+              room_info[i][1] = 0;
+              break;
+              }
+            }
+            break;
+          case 2:
+            room_type_str = "Superior room";
+            System.out.println(bed());
+            while (true){
+              if (room_info[i][3] == 0) {
+              room_info[i][1] = 1;
+              break;
+              }
+            }
+            break;
+          case 3:
+            room_type_str = "Deluxe room";
+            System.out.println(bed());
+            while (true){
+              if (room_info[i][3] == 0) {
+              room_info[i][1] = 2;
+              break;
+              }
+            }
+            break;
+          default:
+            System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
+            newRoom();
+            break;
+        }
       }
 
-      switch (room_type) {
-        case 1:
+      System.out.println("How many days do you want to stay?");
+      int days = sc.nextInt();
+      all_total += total_price(days);
 
-          break;
-        case 2:
+      System.out.println(ANSI_GREEN_BACKGROUND + "Check in success" + ANSI_WHITE);
 
-          break;
-        case 3:
+      // Name: SmartJame So-cool
+      // Total Price: $100 (1 night) + service charge
+      // Room Number: 1,2,3,...
+      // Room type: Standard
+      // Bed type: Single
+      // Total price: $100
+      // Payment: Cash
+      // Change: $0
+      // Thank you for your stay!
 
-          break;
-        default:
-          System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
-          newRoom();
-          break;
-      }
-      // if (check_isRoom_available(room_num)) {
-      // System.out.println("Room is available");
-      // update_room_info(room_num, 1);
-      // service(charge_price);
-      // } else {
-      // System.out.println("Try again");
-      // newRoom();
-      // }
     }
   }
 
-  public static void check_bed() {
+  public static String bed() {
+    try (Scanner sc = new Scanner(System.in)) {
+      System.out.println("---Bed option---");
+      System.out.println("Single bed : 1");
+      System.out.println("King size bed : 2");
+      int bed_type = sc.nextInt();
+      if (bed_type == 1) {
+        return "Single bed";
+      }
+      return "King size bed";
+    }
 
   }
 
@@ -181,7 +230,9 @@ class Hotel {
               b_type = "Queen size\t";
             }
             String price = "" + room_info[i][4] + "\t";
-            table[i] = new String[] { room_num, status, type, b_type, price };
+            if (room_info[i][3] == 0) {
+              table[i] = new String[] { room_num, status, type, b_type, price };
+            }
           }
           for (String[] row : table) {
             printRow(row);
@@ -216,7 +267,10 @@ class Hotel {
               b_type = "Queen size\t";
             }
             String price = "" + room_infor[i][4] + "\t";
-            tables[i] = new String[] { room_num, status, type, b_type, price };
+
+            if (room_infor[i][3] == 1) {
+              tables[i] = new String[] { room_num, status, type, b_type, price };
+            }
           }
           for (String[] row : tables) {
             printRow(row);
@@ -282,19 +336,19 @@ class Hotel {
       try {
         switch (sc.nextInt()) {
           case 1:
-            // single bed
+
             for (int j = 101; j <= 110; j++) {
               check_isRoom_available(j);
             }
             break;
           case 2:
-            // 201-210
+
             for (int j = 201; j <= 210; j++) {
               check_isRoom_available(j);
             }
             break;
           case 3:
-            // 301-310
+
             for (int j = 301; j <= 310; j++) {
               check_isRoom_available(j);
             }
@@ -346,16 +400,17 @@ class Hotel {
     return totals;
   }
 
-  public static void total_price() {
+  public static double total_price(int days_ors_nices) {
     try (Scanner input = new Scanner(System.in)) {
       double price = 0;
       System.out.println("Total price");
       System.out.print("Enter room number: ");
       int room = input.nextInt();
       int[] room_tmp = find_room(room);
-      price = service(price);
-      price += room_tmp[4];
-      System.out.print("Room number: " + room_tmp[0] + " total price is " + price);
+      price += service(price);
+      price += room_tmp[4] * days_ors_nices;
+
+      return price;
     }
   }
 
