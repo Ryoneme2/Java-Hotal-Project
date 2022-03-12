@@ -4,7 +4,6 @@ import java.util.*;
 // first check-in - checkout
 // -- check-in: if customers rented enter the room number
 //            : if not check room available and get info from customer
-
 // -- checkout: if customers rented enter the room number
 
 class Hotel {
@@ -18,6 +17,7 @@ class Hotel {
   public static final String ANSI_CYAN = "\u001B[36m";
   public static final String ANSI_WHITE = "\u001B[37m";
 
+  // ![room_num, room_type, room_bed, room_status, room_price]
   public static int[] addElemArr(int arr[], int a) {
     int i;
     int len = arr.length;
@@ -64,36 +64,6 @@ class Hotel {
         newRoom();
       }
     }
-
-  }
-
-  public static void check_available_room_byType() {
-    System.out.print("Enter room type: ");
-    try (Scanner sc = new Scanner(System.in)) {
-      try {
-        switch (sc.nextInt()) {
-          case 1:
-            // single bed
-            for (int j = 101; j <= 110; j++) {
-              check_isRoom_available(j);
-            }
-            break;
-          case 2:
-            // 201-210
-            break;
-          case 3:
-            // 301-310
-            break;
-          default:
-            System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
-            newRoom();
-            break;
-        }
-      } catch (Exception e) {
-        System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
-        // newRoom();
-      }
-    }
   }
 
   public static void check_bed() {
@@ -129,10 +99,6 @@ class Hotel {
       int room = input.nextInt();
       int[] temp = find_room(room);
 
-      // show room option , user info
-
-      // service
-
       // reset room status and return to room_info
       System.out.print("cancel :0");
       System.out.print("confirm :1");
@@ -143,11 +109,10 @@ class Hotel {
           break;
         case 1:
           update_room_info(room, 0);
-
+          System.out.println("Complete !!");
           break;
         default:
           System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
-
           break;
       }
     }
@@ -225,6 +190,35 @@ class Hotel {
     dashboard();
   }
 
+  public static void check_available_room_byType() {
+  System.out.print("Enter room type: ");
+  try (Scanner sc = new Scanner(System.in)) {
+    try {
+      switch (sc.nextInt()) {
+        case 1:
+          // single bed
+          for (int j = 101; j <= 110; j++) {
+            check_isRoom_available(j);
+          }
+          break;
+        case 2:
+          // 201-210
+          break;
+        case 3:
+          // 301-310
+          break;
+        default:
+          System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
+          newRoom();
+          break;
+      }
+    } catch (Exception e) {
+      System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
+      // newRoom();
+    }
+  }
+}
+
   public static double service(double total) {
     double totals = total;
     try (Scanner sc = new Scanner(System.in)) {
@@ -272,8 +266,6 @@ class Hotel {
       System.out.print("Room number: " + room_tmp[0] + " total price is " + price);
     }
   }
-
-  // ![room_num, room_type, room_bed, room_status, room_price]
 
   public static void room_detail() {
     try (Scanner input = new Scanner(System.in)) {
@@ -344,8 +336,6 @@ class Hotel {
     System.out.println("Room " + room_tmp[0] + " is available");
     return true;
   }
-
-  // ![room_num, room_type, room_bed, room_status, room_price]
 
   // create method update room_info by room_num and room_status
   public static void update_room_info(int room_num, int room_status) {
@@ -424,7 +414,6 @@ class Hotel {
 
   public static void dashboard() {
     try (Scanner scan = new Scanner(System.in)) {
-      try {
         System.out.println("----------Welcome to the Hotel----------");
         System.out.println("Check in: 1");
         System.out.println("Check out: 2");
@@ -450,15 +439,19 @@ class Hotel {
             room_detail();
             break;
           case 5:
-
+            scan.close();
             return;
           default:
             System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
             dashboard();
         }
+
+      } catch (InputMismatchException e) {
+        System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
+        dashboard();
       } finally {
+        dashboard();
       }
-    }
 
   }
 
