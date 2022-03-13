@@ -53,6 +53,7 @@ class Hotel {
       { 309, 2, 1, 0, 3500 },
       { 310, 2, 1, 0, 3500 },
   };
+  public static boolean isError = false;
 
   public static Scanner scan;
 
@@ -117,7 +118,7 @@ class Hotel {
       all_type_of_room[i][0] = room_type;
       all_type_of_room[i][1] = bed_type;
     }
-
+    isError = false;
     System.out.println("How many days do you want to stay?");
     System.out.print(">> ");
     int days = scan.nextInt();
@@ -129,7 +130,11 @@ class Hotel {
         // [101, 0, 0, 0, 2000]
 
         if (room_num > 310) {
-          System.out.println("Sorry, we don't have room for you");
+          System.out.println("Sorry, we don't have enough room for you");
+          for(int i=0 ; i < room_avi.length ; i++){
+            update_room_info(room_avi[i], 0);
+          }
+          isError = true;
           break;
         }
 
@@ -150,6 +155,9 @@ class Hotel {
         }
         room_num++;
       }
+      if(isError) {
+        check_in();
+      }
     }
 
     all_total += total_price(days, room_avi);
@@ -165,31 +173,63 @@ class Hotel {
 
   // method 2 (check out)
   public static void check_out() {
+  try{
     scan = new Scanner(System.in);
     System.out.println("Check out");
     System.out.println("Enter room number");
     System.out.print(">> ");
     int room = scan.nextInt();
-    // int[] temp = find_room(room);
-    // room detail
-    // reset room status and return to room_info
-    System.out.print("cancel :0");
-    System.out.print("confirm :1");
-    System.out.print(">> ");
-    int confirm = scan.nextInt();
-    switch (confirm) {
-      case 0:
-        check_out();
-        break;
-      case 1:
-        update_room_info(room, 0);
-        System.out.println("Complete !!");
-        dashboard();
-      default:
-        System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
-        break;
+    if((room>=101&&room<=110)||(room>=201&&room<=210)||(room>=301&&room<=310)){
+      // room detail
+      int[]room_temp = find_room(room);
+      if(room_temp[3]==1){
+        // reset room status and return to room2
+        int room_num = room_temp[0];
+        String room_type;
+        String room_bed;
+        
+          if (room_temp[1] == 0) {
+            room_type = "Standard room";
+          } else if (room_temp[1] == 1) {
+            room_type = "Superior room";
+          } else {
+            room_type = "Deluxe room";
+          }
+          if (room_temp[2] == 0) {
+            room_bed = "Single bed";
+          } else {
+            room_bed = "Queen size bed";
+          }
+        System.out.println(room_num+"     "+room_type+"     "+room_bed);
+        System.out.println("cancel :0");
+        System.out.println("confirm :1");
+        System.out.print(">> ");
+        int confirm = scan.nextInt();
+        switch (confirm) {
+          case 0:
+            check_out();
+            break;
+          case 1:
+            update_room_info(room, 0);
+            System.out.println("Complete !!");
+            dashboard();
+          default:
+            System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
+            check_out();
+            break;
+        }
+      }
+      else{
+        System.out.println("This room has not been checked in.");
+      }
     }
-  }
+    else{
+      System.out.println(ANSI_RED + "ROOM NOT FOUND" + ANSI_RESET);
+    }
+  }catch (Exception e) {
+      System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
+    }
+}
 
   // method 3(room status)
   public static void room_status() {
@@ -209,8 +249,9 @@ class Hotel {
         check_available_room_byType();
         break;
       case 3:
-        System.out.println("----------Available Room----------");
+        System.out.println(ANSI_GREEN+"----------Available Room----------"+ANSI_RESET);
         System.out.println("Room number\t Status\t\t Room typeBed Type\tPrice" );
+        int avai =0;
         for (int i = 1; i < room2.length; i++) {
           String room_num = room2[i][0] + "\t";
           String status = "";
@@ -218,6 +259,7 @@ class Hotel {
           String b_type = "";
           if (room2[i][3] == 0) {
             status = ANSI_GREEN + "Available\t" + ANSI_RESET;
+            avai++;
           }
           if (room2[i][1] == 0) {
             type = "Standard\t";
@@ -236,12 +278,14 @@ class Hotel {
             System.out.println("" + room_num + "" + status + "" + type
                 + "" + b_type + "" + price);
           }
-        }
+          }
+          System.out.println(ANSI_GREEN +"---------->>>Total Available Room : "+ avai +" <<<----------"+ ANSI_RESET);
         dashboard();
         break;
       case 4:
         System.out.println(ANSI_BLUE + "----------Not Available Room----------" + ANSI_RESET);
         System.out.println("Room number\t Status\t\t Room typeBed Type\tPrice" );
+        int notavai=0;
         for (int i = 1; i < room2.length; i++) {
           String room_num = room2[i][0] + "\t";
           String status = "";
@@ -249,9 +293,8 @@ class Hotel {
           String b_type = "";
           if (room2[i][3] == 1) {
             status = ANSI_RED + "Not available\t" + ANSI_RESET;
-          } else {
-            status = ANSI_RED + "available\t" + ANSI_RESET;
-          }
+            notavai++;
+          } 
           if (room2[i][1] == 0) {
             type = "Standard\t";
           } else if (room2[i][1] == 1) {
@@ -271,6 +314,7 @@ class Hotel {
                 + "" + b_type + "" + price);
           }
         }
+        System.out.println(ANSI_BLUE +"---------->>>Total Not Available Room :"+ notavai +" <<<----------"+ ANSI_RESET);
         dashboard();
         break;
       case 5:
@@ -286,6 +330,8 @@ class Hotel {
     System.out.println(ANSI_BLUE + "----------All room----------" + ANSI_RESET);
     String[][] table = new String[room2.length][];
     table[0] = new String[] { "Room number", "Status\t\t", "Room type", "Bed Type\t", "Price" };
+    int notavailable=0;
+    int available=0;
     for (int i = 1; i < room2.length; i++) {
       String room_num = room2[i][0] + "\t";
       String status = "";
@@ -294,8 +340,10 @@ class Hotel {
 
       if (room2[i][3] == 0) {
         status = ANSI_GREEN + "Available\t" + ANSI_RESET;
+        available++;
       } else {
         status = ANSI_RED + "Not available\t" + ANSI_RESET;
+        notavailable++;
       }
       if (room2[i][1] == 0) {
         type = "Standard";
@@ -318,9 +366,10 @@ class Hotel {
       System.out.println(
           "======================================================================================================");
     }
-
+    System.out.println("---------->>>Total Not Available Room :"+ notavailable +" <<<----------");
+    System.out.println("---------->>>Total Available Room : "+ available +" <<<----------");  
     dashboard();
-  }
+}
 
   public static void check_available_room_byType() {
     System.out.print("Enter room type: ");
