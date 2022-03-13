@@ -79,10 +79,9 @@ class Hotel {
     System.out.println();
   }
 
-  // sub method(check in)
-  public static void newRoom() {
+  // method 1 (check in)
+   public static void check_in() {
     scan = new Scanner(System.in);
-    // double charge_price = 0;
     System.out.println("How many people: ");
     double guest_num = scan.nextInt();
     int room = (int) Math.ceil(guest_num / 2.0);
@@ -90,7 +89,7 @@ class Hotel {
     double all_total = 0;
     int[][] all_type_of_room = new int[room][2];
     for (int i = 0; i < room; i++) {
-      System.out.println("Room " + room + " option");
+      System.out.println("Room " + i+1 + " option");
       System.out.println("---Type of room---");
       System.out.println("Standard room : 1");
       System.out.println("Superior room : 2");
@@ -98,7 +97,7 @@ class Hotel {
       int room_type = scan.nextInt();
       if (room_type > 3 || room_type < 1) {
         System.out.println(ANSI_RED + "xxxxx Invalid input Enter Again xxxxx" + ANSI_RESET);
-        newRoom();
+        check_in();
       } else {
         room_type = room_type - 1;
       }
@@ -108,13 +107,12 @@ class Hotel {
       int bed_type = scan.nextInt();
       if (bed_type > 2 || bed_type < 1) {
         System.out.println(ANSI_RED + "xxxxx Invalid input Enter Again xxxxx" + ANSI_RESET);
-        newRoom();
+        check_in();
       } else {
         bed_type = bed_type - 1;
       }
       all_type_of_room[i][0] = room_type;
       all_type_of_room[i][1] = bed_type;
-      System.out.println(Arrays.toString(all_type_of_room[i]));
     }
 
     System.out.println("How many days do you want to stay?");
@@ -124,17 +122,19 @@ class Hotel {
       int room_num = 101;
       while (true) {
         int[] getOneRoom_info = find_room(room_num);
+        // [101, 0, 0, 0, 2000]
 
         if (room_num > 310) {
           System.out.println("Sorry, we don't have room for you");
           break;
         }
 
+        // The above code is checking if the room is available. If it is available, it will add the
+        // room number to the array room_avi.
         if (getOneRoom_info[1] == all_type_of_room[index][0]) {
           if (getOneRoom_info[2] == all_type_of_room[index][1]) {
             if (getOneRoom_info[3] == 0) {
               room_avi = addElemArr(room_avi, getOneRoom_info[0]);
-              System.out.println(Arrays.toString(room_avi));
               update_room_info(getOneRoom_info[0], 1);
               break;
             }
@@ -147,6 +147,7 @@ class Hotel {
         room_num++;
       }
     }
+
     all_total += total_price(days, room_avi);
 
     System.out.println("Check in success");
@@ -154,32 +155,9 @@ class Hotel {
       System.out.println("Room number: " + room_avi[i]);
     }
     System.out.println("Total price: " + all_total);
-
     dashboard();
   }
 
-  // method 1 (check in)
-  public static void check_in() {
-    System.out.println("new room: 1");
-    System.out.println("Back to main: 2");
-
-    scan = new Scanner(System.in);
-    int choice = scan.nextInt();
-
-    switch (choice) {
-      case 1:
-        newRoom();
-        break;
-      case 2:
-        dashboard();
-        break;
-      default:
-        System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
-        check_in();
-        break;
-    }
-
-  }
 
   // method 2 (check out)
   public static void check_out() {
