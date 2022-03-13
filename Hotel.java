@@ -1,10 +1,5 @@
 import java.util.*;
 
-// first check-in - checkout
-// -- check-in: if customers rented enter the room number
-//            : if not check room available and get info from customer
-// -- checkout: if customers rented enter the room number
-
 class Hotel {
   public static final String ANSI_RESET = "\u001B[0m";
   public static final String ANSI_BLACK = "\u001B[30m";
@@ -386,7 +381,6 @@ class Hotel {
       dashboard();
     } catch (Exception e) {
       System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
-      // newRoom();
     }
   }
 
