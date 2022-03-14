@@ -90,6 +90,10 @@ class Hotel {
     int[] room_avi = new int[0];
     double all_total = 0;
     int[][] all_type_of_room = new int[room][2];
+    if(room > 30) {
+      System.out.println("Sorry, we don't have enough room for you.");
+      dashboard();
+    }
     for (int i = 0; i < room; i++) {
       System.out.println("Room " + (i+1) + " option");
       System.out.println("---Type of room---");
@@ -225,6 +229,7 @@ class Hotel {
     }
     else{
       System.out.println(ANSI_RED + "ROOM NOT FOUND" + ANSI_RESET);
+      check_out();
     }
   }catch (Exception e) {
       System.out.println(ANSI_RED + "xxxxx Invalid input xxxxx" + ANSI_RESET);
@@ -251,7 +256,7 @@ class Hotel {
       case 3:
         System.out.println(ANSI_GREEN+"----------Available Room----------"+ANSI_RESET);
         System.out.println("Room number\t Status\t\t Room typeBed Type\tPrice" );
-        int avai =0;
+        int avai = 0;
         for (int i = 1; i < room2.length; i++) {
           String room_num = room2[i][0] + "\t";
           String status = "";
